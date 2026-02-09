@@ -1,0 +1,7 @@
+{
+  "name": "NearVolt - Hyderabad's Premier EV Network",
+  "description": "A luxury discovery platform for EV charging stations and new vehicle arrivals in Hyderabad, featuring interactive maps and high-end styling.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
