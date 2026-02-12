@@ -14,43 +14,43 @@ const CarDetailPage: React.FC<CarDetailPageProps> = ({ vehicle }) => {
   const [activeTab, setActiveTab] = useState<'specs' | 'performance'>('specs');
 
   return (
-    <div className="pt-20 bg-white">
+    <div className="pt-0 md:pt-20 bg-white">
       {/* Hero Section */}
-      <div className="relative h-[80vh] bg-black overflow-hidden">
+      <div className="relative h-[45vh] md:h-[80vh] min-h-[350px] sm:min-h-[460px] bg-black overflow-hidden">
         <img 
           src={vehicle.image} 
           alt={`${vehicle.model} Hyderabad - Official Showcase`} 
-          className="w-full h-full object-cover opacity-70"
+          className="w-full h-full object-cover opacity-80"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
         
-        <div className="absolute top-10 left-8 sm:left-20">
+        <div className="absolute top-4 left-4 sm:top-10 sm:left-20">
             <button 
                 onClick={() => window.location.hash = '#/'}
-                className="flex items-center gap-2 text-white/80 hover:text-white transition-colors"
+                className="flex items-center gap-2 text-white/90 hover:text-white transition-colors bg-black/20 backdrop-blur-sm px-3 py-2 rounded-full"
             >
-                <ArrowLeft size={20} /> Back to Discover
+                <ArrowLeft size={18} /> <span className="text-sm font-medium">Back</span>
             </button>
         </div>
 
-        <div className="absolute bottom-20 left-8 sm:left-20 max-w-2xl text-white">
-            <span className="px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 inline-block" style={{ backgroundColor: COLORS.primary }}>
+        <div className="absolute bottom-8 left-4 right-4 sm:left-20 sm:right-auto max-w-xl md:max-w-2xl text-white">
+            <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-3 inline-block" style={{ backgroundColor: COLORS.primary }}>
                 2026 FLEET
             </span>
-            <h1 className="text-5xl md:text-7xl font-extrabold mb-4">{vehicle.model}</h1>
-            <p className="text-xl text-white/60 leading-relaxed max-w-xl">
+            <h1 className="text-2xl sm:text-3xl md:text-6xl font-extrabold mb-3 leading-tight">{vehicle.model}</h1>
+            <p className="text-sm sm:text-base text-white/70 leading-relaxed max-w-lg">
                 The pinnacle of urban electrification. Designed specifically for the tech-hubs of Hyderabad.
             </p>
         </div>
 
-        <button className="absolute bottom-20 right-8 sm:right-20 flex items-center gap-3 px-8 py-4 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white font-bold hover:bg-white hover:text-black transition-all">
-           <Box size={24} /> 360° View
+        <button className="absolute bottom-8 right-4 sm:bottom-20 sm:right-20 flex items-center gap-2 px-4 py-2.5 sm:px-6 sm:py-3 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white text-xs sm:text-sm font-bold hover:bg-white hover:text-black transition-all">
+           <Box size={16} /> <span className="hidden sm:inline">360° View</span><span className="sm:hidden">360°</span>
         </button>
       </div>
 
       {/* Main Content */}
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-12 py-20">
-        <div className="flex flex-col lg:flex-row gap-16">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-6 lg:px-12 py-12 md:py-16 lg:py-20">
+        <div className="flex flex-col lg:flex-row gap-12 md:gap-16">
             <div className="flex-1 space-y-16">
                 {/* Specs Section */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -78,17 +78,17 @@ const CarDetailPage: React.FC<CarDetailPageProps> = ({ vehicle }) => {
 
                 {/* Information Tabs */}
                 <div className="space-y-8">
-                    <div className="flex gap-10 border-b border-gray-100 pb-2">
+                    <div className="flex gap-6 md:gap-10 border-b border-gray-100 pb-2 overflow-x-auto no-scrollbar">
                         <button 
                             onClick={() => setActiveTab('specs')}
-                            className={`pb-4 text-xl font-bold transition-all relative ${activeTab === 'specs' ? 'text-[#0F3D2E]' : 'text-gray-300'}`}
+                            className={`pb-4 text-base md:text-xl font-bold whitespace-nowrap transition-all relative ${activeTab === 'specs' ? 'text-[#0F3D2E]' : 'text-gray-300'}`}
                         >
                             Overview
                             {activeTab === 'specs' && <div className="absolute bottom-0 left-0 right-0 h-1 rounded-full" style={{ backgroundColor: COLORS.primary }} />}
                         </button>
                         <button 
                              onClick={() => setActiveTab('performance')}
-                            className={`pb-4 text-xl font-bold transition-all relative ${activeTab === 'performance' ? 'text-[#0F3D2E]' : 'text-gray-300'}`}
+                            className={`pb-4 text-base md:text-xl font-bold whitespace-nowrap transition-all relative ${activeTab === 'performance' ? 'text-[#0F3D2E]' : 'text-gray-300'}`}
                         >
                             Comparison
                             {activeTab === 'performance' && <div className="absolute bottom-0 left-0 right-0 h-1 rounded-full" style={{ backgroundColor: COLORS.primary }} />}
@@ -96,7 +96,7 @@ const CarDetailPage: React.FC<CarDetailPageProps> = ({ vehicle }) => {
                     </div>
 
                     {activeTab === 'specs' ? (
-                        <div className="space-y-6 text-gray-600 leading-relaxed text-lg">
+                        <div className="space-y-6 text-gray-600 leading-relaxed text-base md:text-lg">
                             <h2 className="text-2xl font-bold text-[#0F3D2E]">Engineering for the Deccan Plateau</h2>
                             <p>
                                 The {vehicle.model} is engineered to thrive in Hyderabad's evolving landscape. With a battery architecture optimized for high ambient temperatures, it maintains consistent performance even during peak summer months.
@@ -155,10 +155,10 @@ const CarDetailPage: React.FC<CarDetailPageProps> = ({ vehicle }) => {
 
             {/* Sticky Showroom Widget */}
             <div className="w-full lg:w-[400px]">
-                <div className="sticky top-32 p-8 rounded-[32px] shadow-2xl space-y-8 bg-white border border-gray-100">
+                <div className="sticky top-24 md:top-32 p-6 md:p-8 rounded-[32px] shadow-2xl space-y-8 bg-white border border-gray-100">
                     <div>
                         <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest mb-1">Estimated Price Hyderabad</p>
-                        <p className="text-4xl font-extrabold" style={{ color: COLORS.dark }}>{vehicle.price}</p>
+                        <p className="text-3xl md:text-4xl font-extrabold" style={{ color: COLORS.dark }}>{vehicle.price}</p>
                     </div>
 
                     <div className="space-y-4">

@@ -1,203 +1,288 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, CheckCircle2, Loader2, ChevronDown, Phone, Mail, User, MapPin } from 'lucide-react';
-import { COLORS, HYDERABAD_AREAS } from '../../constants';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  CheckCircle2,
+  MapPin,
+  Building2,
+  Phone,
+  Mail,
+  User,
+  Zap,
+  Upload,
+  X,
+  ArrowRight,
+} from "lucide-react";
 
-const VendorBanner: React.FC = () => {
-  const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success'>('idle');
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    locality: '',
-    whatsappUpdates: true
-  });
+const HYDERABAD_AREAS = [
+  "HITEC City", "Gachibowli", "Madhapur", "Kondapur", "Kukatpally", 
+  "Miyapur", "Ameerpet", "Begumpet", "Secunderabad", "Banjara Hills", "Jubilee Hills",
+];
 
-  const handleSubmit = (e: React.FormEvent) => {
+const EVStationOnboarding: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [formStatus, setFormStatus] = useState<"idle" | "loading" | "success">("idle");
+
+  const initialFormState = {
+    stationName: "",
+    ownerName: "",
+    email: "",
+    phone: "",
+    locality: "",
+    address: "",
+    chargerType: "2",
+    voltageLevel: "2",
+    powerKw: "8",
+    about: "",
+    mediaFile: null as File | null,
+    lat: "17.423200",
+    lng: "78.408500",
+  };
+
+  const [formData, setFormData] = useState(initialFormState);
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
+  }, [isOpen]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormStatus('loading');
-    // Simulate API call
-    setTimeout(() => {
-      setFormStatus('success');
-    }, 2000);
+    setFormStatus("loading");
+    // Simulate API Call
+    setTimeout(() => setFormStatus("success"), 2000);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) {
+      setFormData({ ...formData, mediaFile: e.target.files[0] });
+    }
   };
 
   return (
-    <div className="relative overflow-hidden rounded-[48px] bg-[#0F3D2E] shadow-2xl border border-white/5">
-      <div className="flex flex-col lg:flex-row min-h-[700px]">
-        
-        {/* LEFT COLUMN: CINEMATIC LIFESTYLE IMAGERY (55%) */}
-        <div className="w-full lg:w-[55%] relative h-[400px] lg:h-auto overflow-hidden">
-          <img 
-            src="https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&q=80&w=1200" 
-            alt="Cinematic EV Charging Hub Hyderabad" 
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-[#0F3D2E]" />
-          
-          {/* Glass-Pill Badge */}
-          <div className="absolute top-8 left-8">
-            <div className="px-6 py-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-[#1DB954] animate-pulse" />
-              <span className="text-[10px] font-black text-white uppercase tracking-luxury font-sans">
-                Hyderabad's #1 Energy Network
-              </span>
+    <div className="min-h-screen bg-white font-sans text-slate-900">
+      {/* HEADER / NAV */}
+      <nav className="absolute top-0 w-full px-6 py-6 flex justify-between items-center z-20">
+        <div className="flex items-center gap-2 font-bold text-xl tracking-tighter">
+          <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
+            <Zap className="text-white w-5 h-5" fill="currentColor" />
+          </div>
+          EV<span className="text-emerald-600">GRID</span>
+        </div>
+      </nav>
+
+      <main className="relative pt-32 pb-0">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-16 items-start">
+            
+            {/* LEFT SIDE: CONTENT */}
+            <div className="space-y-8 lg:sticky lg:top-32">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700">Network Expansion 2024</span>
+              </div>
+
+              <h1 className="text-5xl lg:text-7xl font-black tracking-tight leading-[0.9] text-slate-900">
+                Turn your space into a <span className="text-emerald-600">Charging Hub.</span>
+              </h1>
+
+              <p className="text-lg text-slate-500 max-w-md leading-relaxed">
+                Join Hyderabad's fastest growing EV network. List your station for free and start attracting thousands of EV owners today.
+              </p>
+
+              <div className="grid grid-cols-3 gap-8 pt-4">
+                <div>
+                  <div className="text-2xl font-bold">500+</div>
+                  <div className="text-xs text-slate-400 font-bold uppercase tracking-widest">Points</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold">50K+</div>
+                  <div className="text-xs text-slate-400 font-bold uppercase tracking-widest">Drivers</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold">₹0</div>
+                  <div className="text-xs text-slate-400 font-bold uppercase tracking-widest">Entry</div>
+                </div>
+              </div>
+
+              {!isOpen && (
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setIsOpen(true)}
+                  className="group flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold shadow-2xl transition-all"
+                >
+                  Register Your Station
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </motion.button>
+              )}
+            </div>
+
+            {/* RIGHT SIDE: ILLUSTRATION OR FORM */}
+            <div className="relative min-h-[600px] mb-[-1px]"> {/* mb-[-1px] removes gap at bottom */}
+              <AnimatePresence mode="wait">
+                {!isOpen ? (
+                  <motion.div
+                    key="illustration"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="bg-emerald-50 rounded-[40px] p-12 h-full flex flex-col justify-center items-center border border-emerald-100 relative overflow-hidden"
+                  >
+                    {/* Abstract Graphic Elements */}
+                    <div className="absolute top-[-10%] right-[-10%] w-64 h-64 bg-emerald-200/30 rounded-full blur-3xl" />
+                    <div className="absolute bottom-[-10%] left-[-10%] w-64 h-64 bg-white/50 rounded-full blur-3xl" />
+
+                    <div className="relative z-10 w-full space-y-8">
+                        <div className="flex justify-between items-center bg-white p-6 rounded-3xl shadow-sm border border-emerald-100">
+                            <div className="flex gap-4 items-center">
+                                <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center text-white">
+                                    <Building2 size={24} />
+                                </div>
+                                <div>
+                                    <div className="font-bold">Retail Hub</div>
+                                    <div className="text-xs text-slate-400 text-nowrap">Commercial Partner</div>
+                                </div>
+                            </div>
+                            <div className="text-emerald-600 font-black">Live</div>
+                        </div>
+
+                        <div className="flex justify-center">
+                             <div className="w-32 h-44 bg-slate-900 rounded-[32px] flex flex-col items-center justify-center gap-4 relative shadow-2xl border-4 border-white">
+                                <Zap className="text-emerald-400 w-12 h-12 animate-pulse" fill="currentColor" />
+                                <div className="w-12 h-1 bg-slate-700 rounded-full overflow-hidden">
+                                    <motion.div 
+                                        animate={{ x: [-48, 48] }} 
+                                        transition={{ repeat: Infinity, duration: 1.5 }}
+                                        className="w-full h-full bg-emerald-400" 
+                                    />
+                                </div>
+                             </div>
+                        </div>
+
+                        <div className="bg-white/80 backdrop-blur p-4 rounded-2xl border border-white text-center text-sm font-medium text-slate-600 shadow-sm">
+                            Connect your infrastructure to our smart grid
+                        </div>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="form"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-white rounded-[40px] p-8 lg:p-10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border border-slate-100"
+                  >
+                    <div className="flex justify-between items-center mb-8">
+                        <h2 className="text-2xl font-black tracking-tight">Station Profile</h2>
+                        <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                            <X className="w-5 h-5" />
+                        </button>
+                    </div>
+
+                    {formStatus === "success" ? (
+                      <div className="text-center py-20 space-y-4">
+                        <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <CheckCircle2 size={40} />
+                        </div>
+                        <h3 className="text-3xl font-black">Success!</h3>
+                        <p className="text-slate-500">Our team will contact you within 24 hours.</p>
+                      </div>
+                    ) : (
+                      <form onSubmit={handleSubmit} className="space-y-5">
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">Station Details</label>
+                            <input
+                            type="text"
+                            placeholder="Display Name (e.g. Gachibowli Fast Charge)"
+                            required
+                            className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all"
+                            value={formData.stationName}
+                            onChange={(e) => setFormData({...formData, stationName: e.target.value})}
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <input
+                            type="text"
+                            placeholder="Full Name"
+                            required
+                            className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all"
+                            value={formData.ownerName}
+                            onChange={(e) => setFormData({...formData, ownerName: e.target.value})}
+                            />
+                            <div className="relative">
+                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-bold">+91</span>
+                                <input
+                                type="tel"
+                                placeholder="Phone"
+                                className="w-full pl-12 pr-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all"
+                                value={formData.phone}
+                                onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                                />
+                            </div>
+                        </div>
+
+                        <select
+                            required
+                            className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all appearance-none cursor-pointer"
+                            value={formData.locality}
+                            onChange={(e) => setFormData({...formData, locality: e.target.value})}
+                        >
+                            <option value="">Select Area / Locality</option>
+                            {HYDERABAD_AREAS.map(area => <option key={area} value={area}>{area}</option>)}
+                        </select>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <select className="px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all appearance-none"
+                                value={formData.chargerType}
+                                onChange={(e) => setFormData({...formData, chargerType: e.target.value})}
+                            >
+                                <option value="2">Type 2 (AC)</option>
+                                <option value="3">CCS (DC Fast)</option>
+                            </select>
+                            <input
+                                type="number"
+                                placeholder="Power (kW)"
+                                className="px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500 transition-all"
+                                value={formData.powerKw}
+                                onChange={(e) => setFormData({...formData, powerKw: e.target.value})}
+                            />
+                        </div>
+
+                        <div className="relative group">
+                            <input
+                                type="file"
+                                id="file-upload"
+                                className="hidden"
+                                onChange={handleFileChange}
+                            />
+                            <label htmlFor="file-upload" className="flex items-center justify-center gap-2 w-full py-4 border-2 border-dashed border-slate-200 rounded-2xl cursor-pointer group-hover:bg-slate-50 transition-all">
+                                <Upload size={18} className="text-slate-400" />
+                                <span className="text-sm font-medium text-slate-500">
+                                    {formData.mediaFile ? formData.mediaFile.name : "Upload Station Photo"}
+                                </span>
+                            </label>
+                        </div>
+
+                        <button
+                          type="submit"
+                          disabled={formStatus === "loading"}
+                          className="w-full py-5 bg-emerald-600 text-white rounded-2xl font-black uppercase tracking-widest hover:bg-emerald-700 shadow-xl shadow-emerald-200 transition-all disabled:opacity-50"
+                        >
+                          {formStatus === "loading" ? "Processing..." : "Submit Registration"}
+                        </button>
+                      </form>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
-
-          {/* Location Context Overlay */}
-          <div className="absolute bottom-12 left-12 hidden lg:block">
-            <h4 className="text-white/60 text-[10px] font-black uppercase tracking-luxury mb-2 font-sans">Active Deployment</h4>
-            <p className="text-white text-2xl font-black tracking-tighter font-display italic">HITEC City Phase II Hub</p>
-          </div>
         </div>
-
-        {/* RIGHT COLUMN: THE COMMAND FORM (45%) */}
-        <div className="w-full lg:w-[45%] bg-[#0F3D2E] p-10 lg:p-16 flex flex-col justify-center relative">
-          <AnimatePresence mode="wait">
-            {formStatus === 'success' ? (
-              <motion.div 
-                key="success"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="text-center space-y-8"
-              >
-                <div className="w-24 h-24 bg-[#1DB954] text-[#0F3D2E] rounded-[32px] mx-auto flex items-center justify-center shadow-2xl shadow-[#1DB954]/20">
-                  <CheckCircle2 size={48} />
-                </div>
-                <div>
-                  <h3 className="text-4xl font-black text-white tracking-tighter mb-4 font-display">Sync Complete.</h3>
-                  <p className="text-white/60 text-lg font-sans font-medium">
-                    Our grid analysts are calculating your asset's potential. Expect a detailed infrastructure quote in your inbox shortly.
-                  </p>
-                </div>
-                <button 
-                  onClick={() => setFormStatus('idle')}
-                  className="px-10 py-4 border-2 border-[#1DB954]/20 rounded-2xl text-[#1DB954] font-black text-[11px] uppercase tracking-luxury hover:bg-[#1DB954]/10 transition-all font-sans"
-                >
-                  Register Another Asset
-                </button>
-              </motion.div>
-            ) : (
-              <motion.div 
-                key="form"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="space-y-10"
-              >
-                <div>
-                  <h2 className="text-4xl lg:text-5xl font-black text-white tracking-tighter leading-none font-display mb-4">
-                    Scale Your <br />
-                    <span className="text-[#1DB954]">Revenue.</span>
-                  </h2>
-                  <p className="text-white/60 text-base font-sans font-medium leading-relaxed">
-                    Get a custom infrastructure quote today. Let our grid experts help you monetize your parking assets.
-                  </p>
-                </div>
-
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <div className="relative group">
-                    <User size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#1DB954] transition-colors" />
-                    <input 
-                      required
-                      type="text"
-                      placeholder="Enter your name"
-                      className="w-full bg-white rounded-2xl pl-14 pr-6 py-5 text-sm font-bold text-[#0D1E3A] focus:outline-none focus:ring-4 focus:ring-[#1DB954]/20 transition-all placeholder:text-gray-300 font-sans"
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    />
-                  </div>
-
-                  <div className="relative group">
-                    <Mail size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#1DB954] transition-colors" />
-                    <input 
-                      required
-                      type="email"
-                      placeholder="work@company.com"
-                      className="w-full bg-white rounded-2xl pl-14 pr-6 py-5 text-sm font-bold text-[#0D1E3A] focus:outline-none focus:ring-4 focus:ring-[#1DB954]/20 transition-all placeholder:text-gray-300 font-sans"
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    />
-                  </div>
-
-                  <div className="flex flex-col md:flex-row gap-5">
-                    <div className="flex-1 relative group">
-                      <div className="absolute left-5 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                        <img src="https://flagcdn.com/w20/in.png" alt="India" className="w-5 h-auto rounded-sm" />
-                        <span className="text-sm font-bold text-gray-400">+91</span>
-                      </div>
-                      <input 
-                        required
-                        type="tel"
-                        placeholder="Phone Number"
-                        className="w-full bg-white rounded-2xl pl-24 pr-6 py-5 text-sm font-bold text-[#0D1E3A] focus:outline-none focus:ring-4 focus:ring-[#1DB954]/20 transition-all placeholder:text-gray-300 font-sans"
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3 px-2">
-                    <label className="flex items-center gap-3 cursor-pointer select-none">
-                      <div className="relative">
-                        <input 
-                          type="checkbox" 
-                          checked={formData.whatsappUpdates}
-                          onChange={(e) => setFormData({...formData, whatsappUpdates: e.target.checked})}
-                          className="peer sr-only"
-                        />
-                        <div className="w-5 h-5 bg-white/10 rounded-md border border-white/20 peer-checked:bg-[#1DB954] peer-checked:border-[#1DB954] transition-all" />
-                        <CheckCircle2 size={14} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#0F3D2E] opacity-0 peer-checked:opacity-100 transition-opacity" />
-                      </div>
-                      <span className="text-[11px] font-bold text-white/70 uppercase tracking-widest font-sans">Send me updates on WhatsApp</span>
-                    </label>
-                  </div>
-
-                  <div className="relative group">
-                    <MapPin size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" />
-                    <select 
-                      required
-                      className="w-full bg-white rounded-2xl pl-14 pr-12 py-5 text-sm font-bold text-[#0D1E3A] appearance-none focus:outline-none focus:ring-4 focus:ring-[#1DB954]/20 transition-all font-sans"
-                      onChange={(e) => setFormData({...formData, locality: e.target.value})}
-                    >
-                      <option value="">Select Locality</option>
-                      {HYDERABAD_AREAS.map(area => (
-                        <option key={area} value={area}>{area}</option>
-                      ))}
-                    </select>
-                    <ChevronDown size={18} className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                  </div>
-
-                  <motion.button 
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    disabled={formStatus === 'loading'}
-                    className="w-full bg-[#1DB954] text-[#0F3D2E] rounded-2xl py-6 font-black text-[12px] uppercase tracking-luxury shadow-2xl shadow-[#1DB954]/20 flex items-center justify-center gap-4 transition-all hover:shadow-[#1DB954]/40 font-sans btn-tech-pulse"
-                  >
-                    {formStatus === 'loading' ? (
-                      <Loader2 size={22} className="animate-spin" />
-                    ) : (
-                      <>
-                        GET FREE HUB QUOTE
-                        <Zap size={20} fill="currentColor" />
-                      </>
-                    )}
-                  </motion.button>
-
-                  <div className="pt-4 flex flex-col items-center gap-2">
-                    <p className="text-[9px] text-white/30 font-bold uppercase tracking-widest text-center font-sans">
-                      By submitting this form, you agree to our <span className="text-white/50 underline cursor-pointer">privacy policy</span> & <span className="text-white/50 underline cursor-pointer">terms</span>.
-                    </p>
-                    <p className="text-[8px] font-black text-[#4287f5] uppercase tracking-luxury font-sans">
-                      Developed by WebBrilliance
-                    </p>
-                  </div>
-                </form>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
+      </main>
     </div>
   );
 };
 
-export default VendorBanner;
+export default EVStationOnboarding;

@@ -1,0 +1,5 @@
+/* App base styles – Tailwind handles most styling via CDN */
+#root {
+  min-height: 100vh;
+  width: 100%;
+}

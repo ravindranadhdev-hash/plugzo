@@ -4,6 +4,7 @@ import { Loader2, ArrowLeft } from 'lucide-react';
 import ChargerCard from './ChargerCard';
 import LocationPermissionModal from './LocationPermissionModal';
 import StationSearch from './StationSearch';
+import IntelligenceDrawer from './IntelligenceDrawer';
 import { Station } from '../../types';
 import HyderabadMap from '../Map/HyderabadMap';
 import { useUserLocation } from '../../hooks/useUserLocation';
@@ -14,9 +15,10 @@ import MobileHeader from '../Layout/MobileHeader';
 interface SplitViewProps {
   activeStationId: number | null;
   onStationSelect: (id: number) => void;
+  isRoot?: boolean;
 }
 
-const SplitView: React.FC<SplitViewProps> = ({ activeStationId, onStationSelect }) => {
+const SplitView: React.FC<SplitViewProps> = ({ activeStationId, onStationSelect, isRoot = false }) => {
   const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -47,15 +49,39 @@ const SplitView: React.FC<SplitViewProps> = ({ activeStationId, onStationSelect 
   }, []);
 
   const handleCardClick = (station: Station) => {
-    if (station?.id) {
-      onStationSelect(station.id);
+    try {
+      // Mobile-Only Redirect Logic
+      const isMobile = window.innerWidth < 768;
+
+      if (isMobile) {
+        // REDIRECT TO NEW PAGE (No Drawer)
+        window.location.hash = `#/station/${station.id}`;
+      } else {
+        // OPEN DRAWER (Desktop only)
+        onStationSelect(station.id); 
+      }
+    } catch (error) {
+      console.error("Navigation sync error:", error);
     }
   };
 
   const handleMarkerClick = (id: string) => {
-    const numericId = parseInt(id);
-    if (!isNaN(numericId)) {
-      onStationSelect(numericId);
+    try {
+      const numericId = parseInt(id);
+      if (!isNaN(numericId)) {
+        // Mobile-Only Redirect Logic
+        const isMobile = window.innerWidth < 768;
+
+        if (isMobile) {
+          // REDIRECT TO NEW PAGE (No Drawer)
+          window.location.hash = `#/station/${numericId}`;
+        } else {
+          // OPEN DRAWER (Desktop only)
+          onStationSelect(numericId);
+        }
+      }
+    } catch (error) {
+      console.error("Marker navigation sync error:", error);
     }
   };
 
@@ -107,6 +133,14 @@ const SplitView: React.FC<SplitViewProps> = ({ activeStationId, onStationSelect 
                     <div className="flex flex-col items-center py-24 gap-4">
                       <Loader2 className="animate-spin text-[#1DB954]" size={48} />
                     </div>
+                  ) : stations.length === 0 ? (
+                    <div className="flex flex-col items-center py-24 gap-4 text-center">
+                      <div className="w-16 h-16 bg-[#F4FFF8] rounded-full flex items-center justify-center mb-4">
+                        <MapPin size={24} className="text-[#1DB954]" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-[#0D1E3A]">No stations available</h3>
+                      <p className="text-sm text-gray-500 px-8">Check your connection or try again later</p>
+                    </div>
                   ) : (
                     <div className="space-y-8">
                       {stations.map((station) => (
@@ -144,7 +178,7 @@ const SplitView: React.FC<SplitViewProps> = ({ activeStationId, onStationSelect 
         {/* DESKTOP VIEW */}
         <div className="hidden md:flex flex-1 w-full bg-white overflow-hidden pt-20">
           <aside className="w-[400px] lg:w-[450px] flex flex-col bg-white border-r border-gray-100 relative z-30 overflow-hidden shadow-xl shadow-gray-100/20">
-            <div className="p-10 pb-4">
+            <div className="p-6 pb-2">
               <div className="flex items-center gap-2 mb-3">
                 <span className="w-2 h-2 bg-[#1DB954] rounded-full animate-pulse" />
                 <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Live Infrastructure</p>
@@ -158,10 +192,18 @@ const SplitView: React.FC<SplitViewProps> = ({ activeStationId, onStationSelect 
               />
             </div>
 
-            <div className="flex-1 overflow-y-auto p-6 space-y-5 scroll-hide no-scrollbar">
+            <div className="flex-1 overflow-y-auto p-6 pt-2 space-y-4 scroll-hide no-scrollbar">
               {loading ? (
                 <div className="py-20 flex flex-col items-center gap-4">
                   <Loader2 className="animate-spin text-[#1DB954]" size={40} />
+                </div>
+              ) : stations.length === 0 ? (
+                <div className="py-20 flex flex-col items-center gap-4 text-center">
+                  <div className="w-16 h-16 bg-[#F4FFF8] rounded-full flex items-center justify-center mb-4">
+                    <MapPin size={24} className="text-[#1DB954]" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-[#0D1E3A]">No stations available</h3>
+                  <p className="text-sm text-gray-500">Check your connection or try again later</p>
                 </div>
               ) : (
                 <>
@@ -185,6 +227,13 @@ const SplitView: React.FC<SplitViewProps> = ({ activeStationId, onStationSelect 
           <main className="flex-1 relative bg-[#F4FFF8] overflow-hidden">
              <HyderabadMap activeChargerId={activeStationId?.toString()} userLocation={userLocation} stations={stations} onMarkerClick={handleMarkerClick} />
           </main>
+          
+          {/* DESKTOP ONLY: GMB DRAWER WITH KEY PROP */}
+          <IntelligenceDrawer 
+            key={activeStationId} 
+            id={activeStationId} 
+            onClose={() => onStationSelect(null)} 
+          />
         </div>
       </div>
     </div>

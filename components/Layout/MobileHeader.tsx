@@ -13,20 +13,22 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ onSearchClick }) => {
   return (
     <>
       <header 
-        className="fixed top-0 left-0 w-full z-[200] shadow-lg pt-[env(safe-area-inset-top)] border-b border-white/5 lg:hidden"
+        className="fixed top-0 left-0 right-0 w-full z-50 shadow-lg border-b border-white/5 lg:hidden"
         style={{ backgroundColor: COLORS.dark }}
       >
-        <div className="flex items-center justify-between h-16 px-5">
-          
+        <div 
+          className="flex items-center justify-between h-14 px-4 pt-[env(safe-area-inset-top)]"
+          style={{ paddingTop: 'max(env(safe-area-inset-top), 8px)' }}
+        >
           {/* BRANDING (LEFT) */}
           <div 
             className="relative cursor-pointer group flex items-center gap-2"
             onClick={() => window.location.hash = '#/'}
           >
             <img 
-              src="/assets/logo2.jpeg" 
+              src="/assets/logo2.png" 
               alt="PLUGZO" 
-              className="h-8 w-auto"
+              className="h-9 w-20 object-contain"
             />
           </div>
 
@@ -82,7 +84,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ onSearchClick }) => {
               <div className="flex justify-between items-center mb-12">
                 <div className="flex items-center gap-2">
                    <img 
-                     src="/assets/logo2.jpeg" 
+                     src="/assets/logo2.png" 
                      alt="PLUGZO" 
                      className="h-8 w-auto"
                    />

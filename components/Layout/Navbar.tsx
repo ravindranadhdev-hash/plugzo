@@ -1,39 +1,73 @@
-import React from 'react';
-import { Menu, Zap, Search, User } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, User } from 'lucide-react';
 import { COLORS } from '../../constants';
 
 const Navbar: React.FC = () => {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const navLinks = [
+    { name: 'Charging', href: '#/' },
+    { name: '2026 Fleet', href: '#/vehicles' },
+    { name: 'Grid Intel', href: '#/blog' },
+    { name: 'Host a Hub', href: '#/vendor' },
+  ];
+
   return (
     <nav 
-      className="hidden lg:flex fixed top-0 left-0 right-0 z-[100] h-20 items-center justify-between px-8"
-      style={{ backgroundColor: COLORS.dark }}
+      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 px-8 flex items-center justify-between ${
+        scrolled 
+          ? 'h-16 bg-[#0A1F1A]/95 backdrop-blur-xl border-b border-white/5 shadow-2xl' 
+          : 'h-20 bg-[#0A1F1A]'
+      }`}
     >
-      <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.location.hash = '#/'}>
+      {/* LOGO AREA */}
+      <div className="flex items-center cursor-pointer" onClick={() => window.location.hash = '#/'}>
         <img 
-          src="/assets/logo2.jpeg" 
-          alt="NearVolt" 
-          className="h-8 w-auto"
+          src="/assets/logo2.png" 
+          alt="PLUGZO" 
+          className={`${scrolled ? 'h-10' : 'h-12'} w-auto transition-all duration-500`}
         />
       </div>
 
-      {/* Desktop Links */}
-      <div className="hidden lg:flex items-center gap-10">
-        <a href="#/" className="text-white/80 hover:text-white font-medium transition-colors">Charging</a>
-        <a href="#/vehicles" className="text-white/80 hover:text-white font-medium transition-colors">2026 Fleet</a>
-        <a href="#/blog" className="text-white/80 hover:text-white font-medium transition-colors">Grid Intel</a>
-        <a href="#/vendor" className="text-white/80 hover:text-white font-medium transition-colors">Host a Hub</a>
+      {/* CENTRAL NAV CAPSULE */}
+      <div className="hidden lg:flex items-center bg-white/5 border border-white/10 px-8 py-2 rounded-full shadow-inner">
+        <div className="flex items-center gap-10">
+          {navLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              className="text-[11px] font-black uppercase tracking-[0.2em] text-white/70 hover:text-[#1DB954] transition-all"
+            >
+              {link.name}
+            </a>
+          ))}
+        </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <button className="p-2 text-white/80 hover:text-white transition-colors">
-          <Search size={22} />
+      {/* ACTIONS AREA */}
+      <div className="flex items-center gap-6">
+        <button className="flex items-center gap-2 text-white/50 hover:text-[#1DB954] transition-colors group">
+          <Search size={18} />
+          <span className="hidden xl:block text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
+            Search
+          </span>
         </button>
+
+        <div className="h-6 w-[1px] bg-white/10" />
+
         <button 
-          className="flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold transition-all hover:scale-105 active:scale-95"
-          style={{ backgroundColor: COLORS.primary, color: '#FFFFFF' }}
+          className="flex items-center gap-3 px-6 py-2.5 rounded-xl font-black text-[11px] uppercase tracking-widest text-white bg-[#1DB954] hover:bg-[#17a045] transition-all active:scale-95 shadow-lg shadow-[#1DB954]/20"
         >
-          <User size={18} />
-          Login
+          <User size={16} strokeWidth={2.5} />
+          <span className="whitespace-nowrap">Access Portal</span>
         </button>
       </div>
     </nav>
