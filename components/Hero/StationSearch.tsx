@@ -90,7 +90,8 @@ const StationSearch: React.FC<StationSearchProps> = ({ onSearch, suggestions = [
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               onClick={handleClear}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-[#0F3D2E] rounded-full p-1 transition-all"
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-[#0F3D2E] rounded-full p-1 transition-all flex items-center justify-center"
+              style={{ marginTop: '-1px' }}
             >
               <X size={14} strokeWidth={3} />
             </motion.button>
@@ -101,9 +102,16 @@ const StationSearch: React.FC<StationSearchProps> = ({ onSearch, suggestions = [
       {/* 2. SEARCH BELOW AREA FILTERS (Professional Pills) */}
       <div className="mt-2 mb-1 overflow-hidden relative">
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2">
-          <div className="flex items-center gap-1.5 px-2 text-[#1DB954] font-bold text-[10px] uppercase tracking-widest whitespace-nowrap shrink-0 border-r border-slate-200 pr-3 mr-1">
+          <button
+            onClick={() => handleSelection('')}
+            className={`flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-bold uppercase tracking-widest whitespace-nowrap shrink-0 border rounded-full transition-all
+              ${query === '' 
+                ? 'bg-[#1DB954] border-[#1DB954] text-white shadow-md shadow-green-500/20' 
+                : 'text-[#1DB954] border-transparent hover:bg-[#1DB954]/10'
+              }`}
+          >
              <Navigation size={12} fill="currentColor" /> Nearby
-          </div>
+          </button>
           
           {POPULAR_LOCALITIES.map((area) => (
             <button

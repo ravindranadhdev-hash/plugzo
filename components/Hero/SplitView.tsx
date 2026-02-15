@@ -1,16 +1,16 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, ArrowLeft } from 'lucide-react';
-import ChargerCard from './ChargerCard';
-import LocationPermissionModal from './LocationPermissionModal';
-import StationSearch from './StationSearch';
-import IntelligenceDrawer from './IntelligenceDrawer';
+import { Loader2, ArrowLeft, ChevronLeft } from 'lucide-react';
 import { Station } from '../../types';
-import HyderabadMap from '../Map/HyderabadMap';
-import { useUserLocation } from '../../hooks/useUserLocation';
 import { useStations } from '../../hooks/useStations';
+import { useUserLocation } from '../../hooks/useUserLocation';
+import ChargerCard from './ChargerCard';
+import HyderabadMap from '../Map/HyderabadMap';
+import StationSearch from './StationSearch';
+import LocationPermissionModal from './LocationPermissionModal';
 import SearchOverlay from './SearchOverlay';
 import MobileHeader from '../Layout/MobileHeader';
+import IntelligenceDrawer from './IntelligenceDrawer';
 
 interface SplitViewProps {
   activeStationId: number | null;
@@ -19,10 +19,13 @@ interface SplitViewProps {
 }
 
 const SplitView: React.FC<SplitViewProps> = ({ activeStationId, onStationSelect, isRoot = false }) => {
+  console.log("🎯 SplitView rendering:", { isRoot, activeStationId });
+  
   const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [mobileView, setMobileView] = useState<'list' | 'map'>('list');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { coords: userLocation, requestLocation: detectLocation } = useUserLocation();
@@ -177,54 +180,69 @@ const SplitView: React.FC<SplitViewProps> = ({ activeStationId, onStationSelect,
 
         {/* DESKTOP VIEW */}
         <div className="hidden md:flex flex-1 w-full bg-white overflow-hidden pt-20">
-          <aside className="w-[400px] lg:w-[450px] flex flex-col bg-white border-r border-gray-100 relative z-30 overflow-hidden shadow-xl shadow-gray-100/20">
+          <aside className={`${
+            isSidebarCollapsed ? 'w-[60px]' : 'w-[400px] lg:w-[450px]'
+          } flex flex-col bg-white border-r border-gray-100 relative z-30 overflow-hidden shadow-xl shadow-gray-100/20 transition-all duration-300`}>
             <div className="p-6 pb-2">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-2 h-2 bg-[#1DB954] rounded-full animate-pulse" />
-                <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Live Infrastructure</p>
+              <div className="flex items-center justify-between mb-3">
+                {!isSidebarCollapsed && (
+                  <h2 className="text-3xl font-semibold tracking-tight text-[#1E1E1E] italic">Elite Hubs.</h2>
+                )}
+                <button
+                  onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+                  className="p-2 rounded-lg hover:bg-gray-100 transition-colors ml-auto"
+                >
+                  <ChevronLeft className={`transition-transform duration-300 ${isSidebarCollapsed ? 'rotate-180' : ''}`} size={20} />
+                </button>
               </div>
-              <h2 className="text-3xl font-semibold tracking-tight text-[#1E1E1E] italic">Elite Hubs.</h2>
               
-              {/* Integrated Search Bar */}
-              <StationSearch 
-                onSearch={setSearchQuery} 
-                suggestions={['Gachibowli', 'HITEC City', 'Madhapur', 'Kondapur', 'Financial District', 'Banjara Hills', 'Jubilee Hills', 'Begumpet']}
-              />
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-6 pt-2 space-y-4 scroll-hide no-scrollbar">
-              {loading ? (
-                <div className="py-20 flex flex-col items-center gap-4">
-                  <Loader2 className="animate-spin text-[#1DB954]" size={40} />
-                </div>
-              ) : stations.length === 0 ? (
-                <div className="py-20 flex flex-col items-center gap-4 text-center">
-                  <div className="w-16 h-16 bg-[#F4FFF8] rounded-full flex items-center justify-center mb-4">
-                    <MapPin size={24} className="text-[#1DB954]" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-[#0D1E3A]">No stations available</h3>
-                  <p className="text-sm text-gray-500">Check your connection or try again later</p>
-                </div>
-              ) : (
-                <>
-                  {stations.map((station) => (
-                    <motion.div
-                      key={station.id}
-                      layout
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3, ease: 'easeOut' }}
-                    >
-                      <ChargerCard station={station} onClick={() => handleCardClick(station)} />
-                    </motion.div>
-                  ))}
-                </>
+              {/* Integrated Search Bar - Only show when not collapsed */}
+              {!isSidebarCollapsed && (
+                <StationSearch 
+                  onSearch={setSearchQuery} 
+                  suggestions={['Gachibowli', 'HITEC City', 'Madhapur', 'Kondapur', 'Financial District', 'Banjara Hills', 'Jubilee Hills', 'Begumpet']}
+                />
               )}
             </div>
+
+            {/* Station List - Only show when not collapsed */}
+            {!isSidebarCollapsed && (
+              <div className="flex-1 overflow-y-auto p-6 pt-2 space-y-4 scroll-hide no-scrollbar">
+                {loading ? (
+                  <div className="py-20 flex flex-col items-center gap-4">
+                    <Loader2 className="animate-spin text-[#1DB954]" size={40} />
+                  </div>
+                ) : stations.length === 0 ? (
+                  <div className="py-20 flex flex-col items-center gap-4 text-center">
+                    <div className="w-16 h-16 bg-[#F4FFF8] rounded-full flex items-center justify-center mb-4">
+                      <MapPin size={24} className="text-[#1DB954]" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-[#0D1E3A]">No stations available</h3>
+                    <p className="text-sm text-gray-500">Check your connection or try again later</p>
+                  </div>
+                ) : (
+                  <>
+                    {stations.map((station) => (
+                      <motion.div
+                        key={station.id}
+                        layout
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3, ease: 'easeOut' }}
+                      >
+                        <ChargerCard station={station} onClick={() => handleCardClick(station)} />
+                      </motion.div>
+                    ))}
+                  </>
+                )}
+              </div>
+            )}
           </aside>
 
-          <main className="flex-1 relative bg-[#F4FFF8] overflow-hidden">
+          <main className={`${
+            isSidebarCollapsed ? 'flex-1 w-full' : 'flex-1'
+          } relative bg-[#F4FFF8] overflow-hidden`}>
              <HyderabadMap activeChargerId={activeStationId?.toString()} userLocation={userLocation} stations={stations} onMarkerClick={handleMarkerClick} />
           </main>
           

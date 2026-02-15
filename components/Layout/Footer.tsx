@@ -1,8 +1,11 @@
 import React from 'react';
 import { Zap, Instagram, Twitter, Linkedin } from 'lucide-react';
 
-const FooterLink: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <a className="text-gray-400 hover:text-[#1DB954] transition-colors duration-200 text-sm cursor-pointer">
+const FooterLink: React.FC<{ children: React.ReactNode; href?: string }> = ({ children, href = "#" }) => (
+  <a 
+    href={href}
+    className="text-gray-400 hover:text-[#1DB954] transition-colors duration-200 text-sm cursor-pointer"
+  >
     {children}
   </a>
 );
@@ -31,6 +34,22 @@ const Footer: React.FC = () => {
                 src="/assets/logo2.png" 
                 alt="PLUGZO" 
                 className="h-12 w-auto object-contain"
+                onError={(e) => {
+                  console.error('Footer logo failed to load:', e);
+                  // Fallback to text if image fails
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  const parent = target.parentElement;
+                  if (parent && !parent.querySelector('.fallback-text')) {
+                    const fallback = document.createElement('div');
+                    fallback.className = 'fallback-text text-white font-bold text-xl';
+                    fallback.textContent = 'PLUGZO';
+                    parent.appendChild(fallback);
+                  }
+                }}
+                onLoad={() => {
+                  console.log('Footer logo loaded successfully');
+                }}
               />
             </div>
             <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
@@ -60,16 +79,16 @@ const Footer: React.FC = () => {
               </ul>
             </div>
 
-            {/* Column 2: Partners */}
+            {/* Column 2: Explore */}
             <div>
               <h4 className="text-white font-semibold text-sm mb-4 uppercase tracking-wider">
-                Partners
+                Explore
               </h4>
               <ul className="space-y-3">
-                <li><FooterLink>Host a Station</FooterLink></li>
-                <li><FooterLink>Business Solutions</FooterLink></li>
-                <li><FooterLink>Fleet Services</FooterLink></li>
-                <li><FooterLink>Developer API</FooterLink></li>
+                <li><FooterLink href="#/collections">Collections</FooterLink></li>
+                <li><FooterLink href="#/india-ev">India on EV</FooterLink></li>
+                <li><FooterLink href="#/updates">Updates</FooterLink></li>
+                <li><FooterLink href="#/about">About Us</FooterLink></li>
               </ul>
             </div>
 
@@ -79,10 +98,10 @@ const Footer: React.FC = () => {
                 Support
               </h4>
               <ul className="space-y-3">
-                <li><FooterLink>Help Center</FooterLink></li>
-                <li><FooterLink>Contact Us</FooterLink></li>
-                <li><FooterLink>24/7 Assistance</FooterLink></li>
-                <li><FooterLink>FAQs</FooterLink></li>
+                <li><FooterLink href="#/contact">Contact Us</FooterLink></li>
+                <li><FooterLink href="#/help">Help Center</FooterLink></li>
+                <li><FooterLink href="#/assistance">24/7 Assistance</FooterLink></li>
+                <li><FooterLink href="#/faqs">FAQs</FooterLink></li>
               </ul>
             </div>
 
@@ -92,10 +111,12 @@ const Footer: React.FC = () => {
                 Company
               </h4>
               <ul className="space-y-3">
-                <li><FooterLink>About Us</FooterLink></li>
+                <li><FooterLink href="#/about">About Us</FooterLink></li>
+                <li><FooterLink href="#/updates">Updates</FooterLink></li>
+                <li><FooterLink href="#/india-ev">India on EV</FooterLink></li>
                 <li><FooterLink>Careers</FooterLink></li>
-                <li><FooterLink>Privacy Policy</FooterLink></li>
-                <li><FooterLink>Terms of Service</FooterLink></li>
+                <li><FooterLink href="#/privacy">Privacy Policy</FooterLink></li>
+                <li><FooterLink href="#/terms">Terms of Service</FooterLink></li>
               </ul>
             </div>
 
@@ -106,14 +127,8 @@ const Footer: React.FC = () => {
       {/* Bottom Bar */}
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-4 text-sm text-gray-400">
             <p>© {currentYear} Plugzo Energy Network. All rights reserved.</p>
-            <p>
-              Designed by{' '}
-              <span className="text-white hover:text-[#1DB954] transition-colors cursor-pointer">
-                WebBrilliance
-              </span>
-            </p>
           </div>
         </div>
       </div>

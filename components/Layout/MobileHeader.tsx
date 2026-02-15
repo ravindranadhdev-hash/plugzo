@@ -29,6 +29,22 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ onSearchClick }) => {
               src="/assets/logo2.png" 
               alt="PLUGZO" 
               className="h-9 w-20 object-contain"
+              onError={(e) => {
+                console.error('MobileHeader logo failed to load:', e);
+                // Fallback to text if image fails
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                const parent = target.parentElement;
+                if (parent && !parent.querySelector('.fallback-text')) {
+                  const fallback = document.createElement('div');
+                  fallback.className = 'fallback-text text-white font-bold text-lg';
+                  fallback.textContent = 'PLUGZO';
+                  parent.appendChild(fallback);
+                }
+              }}
+              onLoad={() => {
+                console.log('MobileHeader logo loaded successfully');
+              }}
             />
           </div>
 
@@ -86,7 +102,23 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ onSearchClick }) => {
                    <img 
                      src="/assets/logo2.png" 
                      alt="PLUGZO" 
-                     className="h-8 w-auto"
+                     className="h-8 w-auto object-contain"
+                     onError={(e) => {
+                       console.error('Drawer logo failed to load:', e);
+                       // Fallback to text if image fails
+                       const target = e.target as HTMLImageElement;
+                       target.style.display = 'none';
+                       const parent = target.parentElement;
+                       if (parent && !parent.querySelector('.fallback-text')) {
+                         const fallback = document.createElement('div');
+                         fallback.className = 'fallback-text text-[#0D1E3A] font-bold text-lg';
+                         fallback.textContent = 'PLUGZO';
+                         parent.appendChild(fallback);
+                       }
+                     }}
+                     onLoad={() => {
+                       console.log('Drawer logo loaded successfully');
+                     }}
                    />
                 </div>
                 <button 

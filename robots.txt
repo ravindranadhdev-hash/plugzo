@@ -1,0 +1,26 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://plugzo.in/sitemap.xml
+
+# Block unnecessary directories
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /temp/
+Disallow: /*.json$
+Disallow: /dist/
+Disallow: /node_modules/
+
+# Allow important assets
+Allow: /assets/
+Allow: /images/
+Allow: /css/
+Allow: /js/
+
+# Crawl delay (optional)
+Crawl-delay: 1
+
+# Host (for CDNs)
+Host: https://plugzo.in

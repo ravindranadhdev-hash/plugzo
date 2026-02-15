@@ -5,11 +5,24 @@ import SplitView from './components/Hero/SplitView';
 import VehicleShowcase from './components/Vehicle/VehicleShowcase';
 import VendorBanner from './components/Registration/VendorBanner';
 import BlogGrid from './components/Blog/BlogGrid';
+import FAQSection from './components/FAQ/FAQSection';
+import EVStockInfo from './components/Stock/EVStockInfo';
+import PrivacyPolicy from './components/Legal/PrivacyPolicy';
+import TermsOfService from './components/Legal/TermsOfService';
+import HelpCenter from './components/Support/HelpCenter';
+import Assistance247 from './components/Support/Assistance247';
+import FAQs from './components/Support/FAQs';
+import EVStationRegistration from './components/Registration/EVStationRegistration';
 import CarDetailPage from './components/Details/CarDetailPage';
 import BlogDetailPage from './components/Details/BlogDetailPage';
 import StationDetailPage from './components/Details/StationDetailPage';
 import IntelligenceDrawer from './components/Hero/IntelligenceDrawer';
 import PlugzoBot from './components/Chat/PlugzoBot';
+import AboutPage from './components/About/AboutPage';
+import UpdatesPage from './components/Updates/UpdatesPage';
+import IndiaEVPage from './components/IndiaEV/IndiaEVPage';
+import CollectionsPage from './components/Collections/CollectionsPage';
+import ContactPage from './components/Contact/ContactPage';
 import { VEHICLES, BLOGS } from './data';
 
 const App: React.FC = () => {
@@ -47,26 +60,83 @@ const App: React.FC = () => {
         />
         <VehicleShowcase />
         <VendorBanner />
+        <EVStockInfo />
+        <FAQSection />
         <BlogGrid />
       </div>
     );
   }
 
   try {
-    // B. Station Detail
+    // A. About Page
+    if (currentPath === '#/about') {
+      return <AboutPage />;
+    }
+
+    // B. Updates Page
+    if (currentPath === '#/updates') {
+      return <UpdatesPage />;
+    }
+
+    // C. India EV Page
+    if (currentPath === '#/india-ev') {
+      return <IndiaEVPage />;
+    }
+
+    // D. Collections Page
+    if (currentPath === '#/collections') {
+      return <CollectionsPage />;
+    }
+
+    // E. Contact Page
+    if (currentPath === '#/contact') {
+      return <ContactPage />;
+    }
+
+    // F. Privacy Policy
+    if (currentPath === '#/privacy') {
+      return <PrivacyPolicy />;
+    }
+
+    // G. Terms of Service
+    if (currentPath === '#/terms') {
+      return <TermsOfService />;
+    }
+
+    // H. Help Center
+    if (currentPath === '#/help') {
+      return <HelpCenter />;
+    }
+
+    // I. 24/7 Assistance
+    if (currentPath === '#/assistance') {
+      return <Assistance247 />;
+    }
+
+    // J. FAQs
+    if (currentPath === '#/faqs') {
+      return <FAQs />;
+    }
+
+    // K. EV Station Registration
+    if (currentPath === '#/register-station') {
+      return <EVStationRegistration />;
+    }
+
+    // L. Station Detail
     if (currentPath.startsWith('#/station/')) {
       const id = parseInt(currentPath.replace('#/station/', ''), 10);
       return !isNaN(id) ? <StationDetailPage key={`station-${id}`} stationId={id} /> : <div className="p-20 text-center">Invalid Node</div>;
     }
 
-    // C. Vehicle Detail
+    // M. Vehicle Detail
     if (currentPath.startsWith('#/vehicle/')) {
       const id = currentPath.split('/').pop();
       const vehicle = (VEHICLES || []).find(v => v.id === id);
       if (vehicle) return <CarDetailPage key={`vehicle-${id}`} vehicle={vehicle} />;
     }
 
-    // D. Blog Detail
+    // N. Blog Detail
     if (currentPath.startsWith('#/blog/')) {
       const id = currentPath.split('/').pop();
       const blog = (BLOGS || []).find(b => b.id === id);

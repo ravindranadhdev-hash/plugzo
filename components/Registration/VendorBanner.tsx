@@ -84,25 +84,25 @@ const EVStationOnboarding: React.FC = () => {
               </div>
 
               <h1 className="text-5xl lg:text-7xl font-black tracking-tight leading-[0.9] text-slate-900">
-                Turn your space into a <span className="text-emerald-600">Charging Hub.</span>
+                Start Your <span className="text-emerald-600">EV Charging Business.</span>
               </h1>
 
               <p className="text-lg text-slate-500 max-w-md leading-relaxed">
-                Join Hyderabad's fastest growing EV network. List your station for free and start attracting thousands of EV owners today.
+                Transform your space into a profitable EV charging station. Join Hyderabad's fastest growing network and earn from the EV revolution.
               </p>
 
               <div className="grid grid-cols-3 gap-8 pt-4">
                 <div>
-                  <div className="text-2xl font-bold">500+</div>
-                  <div className="text-xs text-slate-400 font-bold uppercase tracking-widest">Points</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold">50K+</div>
-                  <div className="text-xs text-slate-400 font-bold uppercase tracking-widest">Drivers</div>
-                </div>
-                <div>
                   <div className="text-2xl font-bold">₹0</div>
-                  <div className="text-xs text-slate-400 font-bold uppercase tracking-widest">Entry</div>
+                  <div className="text-xs text-slate-400 font-bold uppercase tracking-widest">Investment</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold">30%</div>
+                  <div className="text-xs text-slate-400 font-bold uppercase tracking-widest">Revenue Share</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold">24/7</div>
+                  <div className="text-xs text-slate-400 font-bold uppercase tracking-widest">Support</div>
                 </div>
               </div>
 
@@ -110,10 +110,10 @@ const EVStationOnboarding: React.FC = () => {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => setIsOpen(true)}
+                  onClick={() => window.location.hash = '#/register-station'}
                   className="group flex items-center gap-3 px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold shadow-2xl transition-all"
                 >
-                  Register Your Station
+                  Register EV Station
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </motion.button>
               )}
@@ -174,7 +174,7 @@ const EVStationOnboarding: React.FC = () => {
                     className="bg-white rounded-[40px] p-8 lg:p-10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border border-slate-100"
                   >
                     <div className="flex justify-between items-center mb-8">
-                        <h2 className="text-2xl font-black tracking-tight">Station Profile</h2>
+                        <h2 className="text-2xl font-black tracking-tight">Start Your Business</h2>
                         <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
                             <X className="w-5 h-5" />
                         </button>
@@ -185,8 +185,8 @@ const EVStationOnboarding: React.FC = () => {
                         <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
                             <CheckCircle2 size={40} />
                         </div>
-                        <h3 className="text-3xl font-black">Success!</h3>
-                        <p className="text-slate-500">Our team will contact you within 24 hours.</p>
+                        <h3 className="text-3xl font-black">Business Registered!</h3>
+                        <p className="text-slate-500">Our business team will contact you within 24 hours to setup your charging station.</p>
                       </div>
                     ) : (
                       <form onSubmit={handleSubmit} className="space-y-5">
@@ -270,7 +270,7 @@ const EVStationOnboarding: React.FC = () => {
                           disabled={formStatus === "loading"}
                           className="w-full py-5 bg-emerald-600 text-white rounded-2xl font-black uppercase tracking-widest hover:bg-emerald-700 shadow-xl shadow-emerald-200 transition-all disabled:opacity-50"
                         >
-                          {formStatus === "loading" ? "Processing..." : "Submit Registration"}
+                          {formStatus === "loading" ? "Starting Business..." : "Launch Your Business"}
                         </button>
                       </form>
                     )}

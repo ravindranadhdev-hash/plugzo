@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Clock, Navigation } from 'lucide-react';
+import { ArrowRight, Clock, Navigation, MapPin } from 'lucide-react';
 import { Station } from '../../types';
 import { redirectToGoogleMaps } from '../../utils/navigation';
 
@@ -14,7 +14,8 @@ const ChargerCard: React.FC<ChargerCardProps> = ({ station, onClick }) => {
     const lat = parseFloat(String(station.lat ?? 0));
     const lng = parseFloat(String(station.lng ?? 0));
     if (!isNaN(lat) && !isNaN(lng)) {
-      redirectToGoogleMaps(lat, lng);
+      // Open Google Maps with directions from current location
+      window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
     }
   };
 
@@ -28,10 +29,10 @@ const ChargerCard: React.FC<ChargerCardProps> = ({ station, onClick }) => {
   return (
     <div 
       onClick={onClick}
-      className="group bg-white rounded-[32px] p-4 shadow-sm border border-slate-100 cursor-pointer transition-all duration-200 hover:border-[#1DB954]/40 hover:shadow-xl hover:bg-[#F4FFF8]/30 active:bg-white"
+      className="group bg-white rounded-[20px] p-3 shadow-sm border border-slate-100 cursor-pointer transition-all duration-200 hover:border-[#1DB954]/40 hover:shadow-xl hover:bg-[#F4FFF8]/30 active:bg-white"
     >
-      {/* Image Container - Fixed 3:2 Aspect Ratio, No Zoom */}
-      <div className="relative aspect-[3/2] w-full rounded-[24px] overflow-hidden bg-slate-100 mb-3">
+      {/* Image Container - Reduced Aspect Ratio */}
+      <div className="relative aspect-[4/3] w-full rounded-[16px] overflow-hidden bg-slate-100 mb-2">
         <img 
           src={primaryImage} 
           alt={name}
@@ -40,47 +41,48 @@ const ChargerCard: React.FC<ChargerCardProps> = ({ station, onClick }) => {
         
         {/* Available Badge - Top Left */}
         {isAvailable && (
-          <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-sm px-2.5 py-1 rounded-lg flex items-center gap-1.5">
-            <div className="w-1.5 h-1.5 bg-[#1DB954] rounded-full animate-pulse" />
-            <span className="text-white text-[10px] font-bold uppercase tracking-wider">Available</span>
+          <div className="absolute top-2 left-2 bg-black/70 backdrop-blur-sm px-2 py-0.5 rounded-lg flex items-center gap-1">
+            <div className="w-1 h-1 bg-[#1DB954] rounded-full animate-pulse" />
+            <span className="text-white text-[9px] font-bold uppercase tracking-wider">Available</span>
           </div>
         )}
         
         {/* Rating Badge - Bottom Right */}
-        <div className="absolute bottom-3 right-3 bg-[#1DB954] text-white px-2 py-1 rounded-lg text-[10px] font-bold shadow-lg">
+        <div className="absolute bottom-2 right-2 bg-[#1DB954] text-white px-1.5 py-0.5 rounded-lg text-[9px] font-bold shadow-lg">
           {Number((station as any).overall_rating ?? station.reviews_avg_rating ?? 4.5).toFixed(1)} ★
         </div>
       </div>
 
-      {/* Content Section */}
-      <div className="px-1 space-y-1">
-        <h3 className="text-lg font-bold text-[#0F3D2E] truncate leading-tight group-hover:text-[#1DB954] transition-colors">
+      {/* Content Section - Reduced Spacing */}
+      <div className="px-0.5 space-y-0.5">
+        <h3 className="text-sm font-bold text-[#0F3D2E] truncate leading-tight group-hover:text-[#1DB954] transition-colors">
           {name}
         </h3>
         
-        <div className="flex items-center gap-2 text-slate-500 text-xs font-semibold uppercase tracking-wider">
-          <Clock size={12} className="text-slate-400" />
+        <div className="flex items-center gap-1.5 text-slate-500 text-[10px] font-semibold uppercase tracking-wider">
+          <Clock size={10} className="text-slate-400" />
           <span>{station.eta_minutes ?? '8'} MIN</span>
           <span className="text-slate-300">•</span>
-          <Navigation size={12} className="text-slate-400" />
+          <Navigation size={10} className="text-slate-400" />
           <span>{station.distance_km ?? '1.2'} KM</span>
         </div>
         
-        <p className="text-[#4287f5] text-[10px] font-black uppercase tracking-widest pt-1">
+        <p className="text-[#4287f5] text-[9px] font-black uppercase tracking-widest pt-0.5">
           ⚡ {(station as any).powerKW ?? station.chargers?.[0]?.power_kw ?? '60'} KW Fast Charging
         </p>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex gap-2 mt-4">
-        <button className="flex-1 bg-[#1DB954] text-white py-3.5 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all shadow-lg shadow-green-500/10 hover:brightness-105 active:scale-[0.98]">
+      {/* Action Buttons - Reduced Size */}
+      <div className="flex gap-1.5 mt-2">
+        <button className="flex-1 bg-[#1DB954] text-white py-2.5 rounded-xl font-bold text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-green-500/10 hover:brightness-105 active:scale-[0.98]">
           Reserve Slot
         </button>
         <button 
           onClick={handleQuickNav}
-          className="w-14 bg-[#0F3D2E] text-white flex items-center justify-center rounded-2xl shadow-lg transition-all hover:bg-[#1a2f44] active:scale-90"
+          className="w-11 bg-[#0F3D2E] text-white flex items-center justify-center rounded-xl shadow-lg transition-all hover:bg-[#1a2f44] active:scale-90"
+          title="Get Directions"
         >
-          <ArrowRight size={20} />
+          <MapPin size={18} />
         </button>
       </div>
     </div>
