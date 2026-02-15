@@ -1,7 +1,5 @@
 import React from 'react';
-import { ArrowRight, Clock, Navigation, MapPin } from 'lucide-react';
 import { Station } from '../../types';
-import { redirectToGoogleMaps } from '../../utils/navigation';
 
 interface ChargerCardProps {
   station: Station;
@@ -14,75 +12,93 @@ const ChargerCard: React.FC<ChargerCardProps> = ({ station, onClick }) => {
     const lat = parseFloat(String(station.lat ?? 0));
     const lng = parseFloat(String(station.lng ?? 0));
     if (!isNaN(lat) && !isNaN(lng)) {
-      // Open Google Maps with directions from current location
-      window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
+      window.open(
+        `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+        '_blank'
+      );
     }
   };
 
-  const name = station?.name ?? 'Charging station';
+  const name = station?.name ?? 'Charging Station';
 
-  const primaryImage = station.media?.find((m: any) => m.type === 'primary')?.file_path ||
+  const primaryImage =
+    station.media?.find((m: any) => m.type === 'primary')?.file_path ||
     'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&q=80&w=800';
 
-  const isAvailable = (station as any).status === 'AVAILABLE' || station.is_active === 1;
+  const isAvailable =
+    (station as any).status === 'AVAILABLE' || station.is_active === 1;
 
   return (
-    <div 
+    <div
       onClick={onClick}
-      className="group bg-white rounded-[20px] p-3 shadow-sm border border-slate-100 cursor-pointer transition-all duration-200 hover:border-[#1DB954]/40 hover:shadow-xl hover:bg-[#F4FFF8]/30 active:bg-white"
+      className="group bg-white rounded-[22px] p-3 shadow-sm border border-slate-100 cursor-pointer transition-all duration-200 hover:border-[#1DB954]/40 hover:shadow-xl hover:bg-[#F4FFF8]/30 active:bg-white"
     >
-      {/* Image Container - Reduced Aspect Ratio */}
-      <div className="relative aspect-[4/3] w-full rounded-[16px] overflow-hidden bg-slate-100 mb-2">
-        <img 
-          src={primaryImage} 
+      {/* Image */}
+      <div className="relative aspect-[4/3] w-full rounded-[18px] overflow-hidden bg-slate-100 mb-3">
+        <img
+          src={primaryImage}
           alt={name}
-          className="w-full h-full object-cover" // Zoom animation removed
+          className="w-full h-full object-cover"
         />
-        
-        {/* Available Badge - Top Left */}
+
+        {/* Available Badge */}
         {isAvailable && (
-          <div className="absolute top-2 left-2 bg-black/70 backdrop-blur-sm px-2 py-0.5 rounded-lg flex items-center gap-1">
-            <div className="w-1 h-1 bg-[#1DB954] rounded-full animate-pulse" />
-            <span className="text-white text-[9px] font-bold uppercase tracking-wider">Available</span>
+          <div className="absolute top-3 left-3 bg-[#1DB954] text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-md">
+            Available
           </div>
         )}
-        
-        {/* Rating Badge - Bottom Right */}
-        <div className="absolute bottom-2 right-2 bg-[#1DB954] text-white px-1.5 py-0.5 rounded-lg text-[9px] font-bold shadow-lg">
-          {Number((station as any).overall_rating ?? station.reviews_avg_rating ?? 4.5).toFixed(1)} ★
+
+        {/* Rating Badge */}
+        <div className="absolute bottom-3 right-3 bg-white/95 text-[#0F3D2E] px-2.5 py-1 rounded-full text-[11px] font-bold shadow-md flex items-center gap-1">
+          <i className="fa-solid fa-star text-yellow-400 text-[10px]"></i>
+          {Number(
+            (station as any).overall_rating ??
+              station.reviews_avg_rating ??
+              4.5
+          ).toFixed(1)}
         </div>
       </div>
 
-      {/* Content Section - Reduced Spacing */}
-      <div className="px-0.5 space-y-0.5">
-        <h3 className="text-sm font-bold text-[#0F3D2E] truncate leading-tight group-hover:text-[#1DB954] transition-colors">
+      {/* Content */}
+      <div className="space-y-1">
+        <h3 className="text-[15px] font-bold text-[#0F3D2E] truncate group-hover:text-[#1DB954] transition-colors">
           {name}
         </h3>
-        
-        <div className="flex items-center gap-1.5 text-slate-500 text-[10px] font-semibold uppercase tracking-wider">
-          <Clock size={10} className="text-slate-400" />
-          <span>{station.eta_minutes ?? '8'} MIN</span>
-          <span className="text-slate-300">•</span>
-          <Navigation size={10} className="text-slate-400" />
-          <span>{station.distance_km ?? '1.2'} KM</span>
+
+        <div className="flex items-center gap-3 text-slate-500 text-[11px] font-semibold">
+          <div className="flex items-center gap-1">
+            <i className="fa-regular fa-clock text-slate-400 text-[12px]"></i>
+            <span>{station.eta_minutes ?? '8'} min</span>
+          </div>
+
+          <div className="flex items-center gap-1">
+            <i className="fa-solid fa-location-dot text-slate-400 text-[12px]"></i>
+            <span>{station.distance_km ?? '1.2'} km</span>
+          </div>
         </div>
-        
-        <p className="text-[#4287f5] text-[9px] font-black uppercase tracking-widest pt-0.5">
-          ⚡ {(station as any).powerKW ?? station.chargers?.[0]?.power_kw ?? '60'} KW Fast Charging
+
+        <p className="text-[#1DB954] text-[11px] font-bold uppercase tracking-wide pt-1">
+          ⚡ {(station as any).powerKW ??
+            station.chargers?.[0]?.power_kw ??
+            '60'}{' '}
+          kW Fast Charging
         </p>
       </div>
 
-      {/* Action Buttons - Reduced Size */}
-      <div className="flex gap-1.5 mt-2">
-        <button className="flex-1 bg-[#1DB954] text-white py-2.5 rounded-xl font-bold text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-green-500/10 hover:brightness-105 active:scale-[0.98]">
+      {/* Actions */}
+      <div className="flex gap-2 mt-3">
+        {/*
+        <button className="flex-1 bg-[#1DB954] text-white py-3 rounded-xl font-bold text-[12px] uppercase tracking-wide transition-all shadow-lg shadow-green-500/10 hover:brightness-105 active:scale-[0.98]">
           Reserve Slot
         </button>
-        <button 
+        */}
+
+        <button
           onClick={handleQuickNav}
-          className="w-11 bg-[#0F3D2E] text-white flex items-center justify-center rounded-xl shadow-lg transition-all hover:bg-[#1a2f44] active:scale-90"
-          title="Get Directions"
+          className="flex-1 bg-[#0F3D2E] text-white py-3 rounded-xl flex items-center justify-center gap-2 font-semibold text-[12px] shadow-lg transition-all hover:bg-[#1a2f44] active:scale-95"
         >
-          <MapPin size={18} />
+          <i className="fa-solid fa-route text-[13px]"></i>
+          Get Directions
         </button>
       </div>
     </div>
@@ -90,6 +106,9 @@ const ChargerCard: React.FC<ChargerCardProps> = ({ station, onClick }) => {
 };
 
 export default ChargerCard;
+
+
+
 // import React from 'react';
 // import { Star, ArrowRight, Clock, Navigation } from 'lucide-react';
 // import { Station } from '../../types';

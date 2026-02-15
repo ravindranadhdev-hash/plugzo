@@ -23,158 +23,135 @@ import UpdatesPage from './components/Updates/UpdatesPage';
 import IndiaEVPage from './components/IndiaEV/IndiaEVPage';
 import CollectionsPage from './components/Collections/CollectionsPage';
 import ContactPage from './components/Contact/ContactPage';
+import BrandsPage from './components/Brands/BrandsPage';
 import { VEHICLES, BLOGS } from './data';
 
 const App: React.FC = () => {
-  const [hash, setHash] = useState(() => typeof window !== 'undefined' ? window.location.hash : '#/');
+  const [currentPath, setCurrentPath] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const cleanPath = window.location.pathname.replace(/^\//, '') || 'home';
+      return cleanPath;
+    }
+    return 'home';
+  });
+
   const [activeStationId, setActiveStationId] = useState<number | null>(null);
   const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
-    const handleHashChange = () => setHash(window.location.hash || '#/');
-    const handleResize = () => setIsDesktop(window.innerWidth >= 768);
-    
-    window.addEventListener('hashchange', handleHashChange);
+    const handlePopState = () => {
+      const cleanPath = window.location.pathname.replace(/^\//, '') || 'home';
+      setCurrentPath(cleanPath);
+    };
+
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+
+    window.addEventListener('popstate', handlePopState);
     window.addEventListener('resize', handleResize);
-    handleResize(); // Initial check
+    handleResize();
 
     return () => {
-      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('popstate', handlePopState);
       window.removeEventListener('resize', handleResize);
     };
   }, []);
 
   const renderContent = () => {
-  // 1. Safe URL Fallback - Normalize all root variations
-  const currentPath = hash === '' || hash === '#' || hash === '#/' ? '#/' : hash;
+    try {
+      const normalizedPath =
+        currentPath === '' || currentPath === '/' ? 'home' : currentPath;
 
-  // A. Home View (Default) - This must be the priority fallback
-  if (currentPath === '#/') {
+      // HOME
+      if (normalizedPath === 'home') {
+        return (
+          <>
+            <SplitView />
+            <VehicleShowcase />
+            <VendorBanner />
+            <BlogGrid />
+            <FAQSection />
+            <EVStockInfo />
+          </>
+        );
+      }
+
+      if (normalizedPath === 'about') return <AboutPage />;
+      if (normalizedPath === 'updates') return <UpdatesPage />;
+      if (normalizedPath === 'india-ev') return <IndiaEVPage />;
+      if (normalizedPath === 'collections') return <CollectionsPage />;
+      if (normalizedPath === 'brands') return <BrandsPage />;
+      if (normalizedPath === 'contact') return <ContactPage />;
+      if (normalizedPath === 'privacy') return <PrivacyPolicy />;
+      if (normalizedPath === 'terms') return <TermsOfService />;
+      if (normalizedPath === 'help') return <HelpCenter />;
+      if (normalizedPath === 'assistance') return <Assistance247 />;
+      if (normalizedPath === 'faqs') return <FAQs />;
+      if (normalizedPath === 'register-station') return <EVStationRegistration />;
+
+      // Station Detail
+      if (normalizedPath.startsWith('station/')) {
+        const id = parseInt(normalizedPath.replace('station/', ''), 10);
+        return !isNaN(id) ? (
+          <StationDetailPage key={`station-${id}`} stationId={id} />
+        ) : (
+          <div className="p-20 text-center">Invalid Station</div>
+        );
+      }
+
+      // Vehicle Detail
+      if (normalizedPath.startsWith('vehicle/')) {
+        const id = normalizedPath.split('/').pop();
+        const vehicle = (VEHICLES || []).find(v => v.id === id);
+        if (vehicle)
+          return <CarDetailPage key={`vehicle-${id}`} vehicle={vehicle} />;
+      }
+
+      // Blog Detail
+      if (normalizedPath.startsWith('blog/')) {
+        const id = normalizedPath.split('/').pop();
+        const blog = (BLOGS || []).find(b => b.id === id);
+        if (blog)
+          return <BlogDetailPage key={`blog-${id}`} blog={blog} />;
+      }
+
+    } catch (e) {
+      console.error('Routing error:', e);
+    }
+
+    // Ultimate fallback
     return (
       <div className="animate-in fade-in duration-500">
-        {/* Pass a flag to indicate we are at root to prevent sorting loops */}
-        <SplitView 
-          activeStationId={activeStationId} 
-          onStationSelect={setActiveStationId} 
-          isRoot={true} 
+        <SplitView
+          activeStationId={activeStationId}
+          onStationSelect={setActiveStationId}
         />
         <VehicleShowcase />
         <VendorBanner />
-        <EVStockInfo />
-        <FAQSection />
         <BlogGrid />
       </div>
     );
-  }
-
-  try {
-    // A. About Page
-    if (currentPath === '#/about') {
-      return <AboutPage />;
-    }
-
-    // B. Updates Page
-    if (currentPath === '#/updates') {
-      return <UpdatesPage />;
-    }
-
-    // C. India EV Page
-    if (currentPath === '#/india-ev') {
-      return <IndiaEVPage />;
-    }
-
-    // D. Collections Page
-    if (currentPath === '#/collections') {
-      return <CollectionsPage />;
-    }
-
-    // E. Contact Page
-    if (currentPath === '#/contact') {
-      return <ContactPage />;
-    }
-
-    // F. Privacy Policy
-    if (currentPath === '#/privacy') {
-      return <PrivacyPolicy />;
-    }
-
-    // G. Terms of Service
-    if (currentPath === '#/terms') {
-      return <TermsOfService />;
-    }
-
-    // H. Help Center
-    if (currentPath === '#/help') {
-      return <HelpCenter />;
-    }
-
-    // I. 24/7 Assistance
-    if (currentPath === '#/assistance') {
-      return <Assistance247 />;
-    }
-
-    // J. FAQs
-    if (currentPath === '#/faqs') {
-      return <FAQs />;
-    }
-
-    // K. EV Station Registration
-    if (currentPath === '#/register-station') {
-      return <EVStationRegistration />;
-    }
-
-    // L. Station Detail
-    if (currentPath.startsWith('#/station/')) {
-      const id = parseInt(currentPath.replace('#/station/', ''), 10);
-      return !isNaN(id) ? <StationDetailPage key={`station-${id}`} stationId={id} /> : <div className="p-20 text-center">Invalid Node</div>;
-    }
-
-    // M. Vehicle Detail
-    if (currentPath.startsWith('#/vehicle/')) {
-      const id = currentPath.split('/').pop();
-      const vehicle = (VEHICLES || []).find(v => v.id === id);
-      if (vehicle) return <CarDetailPage key={`vehicle-${id}`} vehicle={vehicle} />;
-    }
-
-    // N. Blog Detail
-    if (currentPath.startsWith('#/blog/')) {
-      const id = currentPath.split('/').pop();
-      const blog = (BLOGS || []).find(b => b.id === id);
-      if (blog) return <BlogDetailPage key={`blog-${id}`} blog={blog} />;
-    }
-  } catch (e) {
-    console.error("Routing error:", e);
-  }
-
-  // E. Ultimate fallback - Never let this fail
-  return (
-    <div className="animate-in fade-in duration-500">
-      <SplitView activeStationId={activeStationId} onStationSelect={setActiveStationId} />
-      <VehicleShowcase />
-      <VendorBanner />
-      <BlogGrid />
-    </div>
-  );
-};
+  };
 
   return (
     <div className="min-h-screen bg-[#F4FFF8] flex flex-col relative overflow-x-hidden">
       <Navbar />
-      
+
       <main className="flex-1">
-        {/* If renderContent fails for any reason, it won't kill the whole app */}
-        {renderContent() || <div className="p-20 text-center">Loading Content...</div>}
+        {renderContent() || (
+          <div className="p-20 text-center">Loading Content...</div>
+        )}
       </main>
 
       <Footer />
       <PlugzoBot />
-      
-      {/* Safe Drawer Render */}
+
       {isDesktop && activeStationId !== null && (
-        <IntelligenceDrawer 
-          key={`drawer-${activeStationId}`} 
-          id={activeStationId} 
-          onClose={() => setActiveStationId(null)} 
+        <IntelligenceDrawer
+          key={`drawer-${activeStationId}`}
+          id={activeStationId}
+          onClose={() => setActiveStationId(null)}
         />
       )}
     </div>

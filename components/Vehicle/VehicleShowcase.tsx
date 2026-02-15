@@ -21,15 +21,14 @@ const VehicleShowcase: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#1DB954]" />
-              <span className="text-xs font-bold tracking-widest text-[#1DB954] uppercase">EV BRANDS</span>
+              {/* <span className="text-xs font-bold tracking-widest text-[#1DB954] uppercase">EV BRANDS</span> */}
             </div>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-[#0F3D2E] to-[#1DB954]">
               Leading EV Manufacturers
             </h2>
           </div>
           <div className="flex items-center text-[#1DB954] font-medium hover:text-[#17a045] transition-colors group cursor-pointer">
-            <span>Explore All Brands</span>
+            <span onClick={() => window.location.hash = '#/brands'}>Explore All Brands</span>
             <ChevronRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
           </div>
         </div>

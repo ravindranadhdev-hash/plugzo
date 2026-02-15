@@ -2,12 +2,18 @@ import React from 'react';
 import { Zap, Instagram, Twitter, Linkedin } from 'lucide-react';
 
 const FooterLink: React.FC<{ children: React.ReactNode; href?: string }> = ({ children, href = "#" }) => (
-  <a 
-    href={href}
+  <button
+    onClick={() => {
+      if (href && href !== "#") {
+        const cleanHref = href.replace('#/', '');
+        window.history.pushState({}, '', cleanHref);
+        window.dispatchEvent(new PopStateEvent('popstate'));
+      }
+    }}
     className="text-gray-400 hover:text-[#1DB954] transition-colors duration-200 text-sm cursor-pointer"
   >
     {children}
-  </a>
+  </button>
 );
 
 const SocialIcon = ({ icon }: { icon: React.ReactNode }) => (
@@ -86,6 +92,7 @@ const Footer: React.FC = () => {
               </h4>
               <ul className="space-y-3">
                 <li><FooterLink href="#/collections">Collections</FooterLink></li>
+                <li><FooterLink href="#/brands">Brands</FooterLink></li>
                 <li><FooterLink href="#/india-ev">India on EV</FooterLink></li>
                 <li><FooterLink href="#/updates">Updates</FooterLink></li>
                 <li><FooterLink href="#/about">About Us</FooterLink></li>

@@ -94,12 +94,12 @@ const Navbar: React.FC = () => {
   };
 
   const navLinks = [
-    { name: 'Charging', href: '#/' },
-    { name: 'Collections', href: '#/collections' },
-    { name: 'India on EV', href: '#/india-ev' },
-    { name: 'Updates', href: '#/updates' },
-    { name: 'About', href: '#/about' },
-    { name: 'Contact', href: '#/contact' },
+    // { name: 'Charging', href: '/' },
+    { name: 'Collections', href: '/collections' },
+    { name: 'India on EV', href: '/india-ev' },
+    { name: 'Updates', href: '/updates' },
+    { name: 'About', href: '/about' },
+    { name: 'Contact', href: '/contact' },
   ];
 
   return (
@@ -139,17 +139,25 @@ const Navbar: React.FC = () => {
       <div className="hidden lg:flex items-center bg-white/5 border border-white/10 px-8 py-2 rounded-full shadow-inner">
         <div className="flex items-center gap-10">
           {navLinks.map((link) => (
-            <a
+            <button
               key={link.name}
-              href={link.href}
+              onClick={() => {
+                // Use pushState to navigate without page reload
+                window.history.pushState({}, '', link.href);
+                // Trigger a popstate event for the app to handle
+                window.dispatchEvent(new PopStateEvent('popstate'));
+              }}
               className="text-[11px] font-black uppercase tracking-[0.2em] text-white/70 hover:text-[#1DB954] transition-all"
             >
               {link.name}
-            </a>
+            </button>
           ))}
           {/* Explore More Button */}
           <button
-            onClick={() => window.location.hash = '#/collections'}
+            onClick={() => {
+              window.history.pushState({}, '', '/collections');
+              window.dispatchEvent(new PopStateEvent('popstate'));
+            }}
             className="text-[11px] font-black uppercase tracking-[0.2em] text-white/90 hover:text-[#1DB954] transition-all border border-white/20 px-4 py-1 rounded-full hover:border-[#1DB954]/40 hover:bg-white/10"
           >
             Explore More →
