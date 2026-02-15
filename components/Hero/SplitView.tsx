@@ -57,8 +57,9 @@ const SplitView: React.FC<SplitViewProps> = ({ activeStationId, onStationSelect,
       const isMobile = window.innerWidth < 768;
 
       if (isMobile) {
-        // REDIRECT TO NEW PAGE (No Drawer)
-        window.location.hash = `#/station/${station.id}`;
+        // REDIRECT TO NEW PAGE (No Drawer) - Use clean URL
+        window.history.pushState({}, '', `/station/${station.id}`);
+        window.dispatchEvent(new PopStateEvent('popstate'));
       } else {
         // OPEN DRAWER (Desktop only)
         onStationSelect(station.id); 
@@ -84,7 +85,7 @@ const SplitView: React.FC<SplitViewProps> = ({ activeStationId, onStationSelect,
         }
       }
     } catch (error) {
-      console.error("Marker navigation sync error:", error);
+      console.error("Marker click error:", error);
     }
   };
 

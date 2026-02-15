@@ -67,7 +67,10 @@ const App: React.FC = () => {
       if (normalizedPath === 'home') {
         return (
           <>
-            <SplitView />
+            <SplitView
+              activeStationId={activeStationId}
+              onStationSelect={setActiveStationId}
+            />
             <VehicleShowcase />
             <VendorBanner />
             <BlogGrid />
